@@ -3,17 +3,12 @@ package br.com.correios;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.client.RestTemplate;
 
-import brave.Tracing;
-import brave.opentracing.BraveTracer;
-import brave.sampler.Sampler;
-import zipkin2.Span;
-import zipkin2.codec.Encoding;
-import zipkin2.reporter.AsyncReporter;
-import zipkin2.reporter.okhttp3.OkHttpSender;
+import br.com.tracing.configuration.OpenTracingZipkinConfig;
+import br.com.tracing.filter.OpenTracingZipkinFilter;
+import io.opentracing.Tracer;
 
 @SpringBootApplication
 public class Micro1Application {
@@ -26,18 +21,16 @@ public class Micro1Application {
 	}
 
 	@Bean
-	public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
-		return restTemplateBuilder.build();
+	public Tracer tracer() {
+		return new OpenTracingZipkinConfig().build(localServiceName);
 	}
 
-	/*
-	 * @Bean public io.opentracing.Tracer zipkinTracer() { OkHttpSender okHttpSender
-	 * = OkHttpSender.newBuilder().encoding(Encoding.JSON)
-	 * .endpoint("http://localhost:9411/api/v2/spans").build(); AsyncReporter<Span>
-	 * reporter = AsyncReporter.builder(okHttpSender).build(); Tracing braveTracer =
-	 * Tracing.newBuilder().localServiceName(localServiceName).spanReporter(
-	 * reporter) .traceId128Bit(true).sampler(Sampler.ALWAYS_SAMPLE).build(); return
-	 * BraveTracer.create(braveTracer); }
-	 */
+	@Bean
+	public FilterRegistrationBean<OpenTracingZipkinFilter> filterRegistrationBean() {
+		FilterRegistrationBean<OpenTracingZipkinFilter> filterRegistrationBean = new FilterRegistrationBean<OpenTracingZipkinFilter>();
+		filterRegistrationBean.setFilter(new OpenTracingZipkinFilter());
+		filterRegistrationBean.addUrlPatterns("/*");
+		return filterRegistrationBean;
+	}
 
 }
