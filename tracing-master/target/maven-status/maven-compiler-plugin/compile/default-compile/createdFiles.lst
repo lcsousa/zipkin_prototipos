@@ -1,0 +1,4 @@
+br/com/tracing/configuration/OpenTracingZipkinConfig.class
+br/com/tracing/util/OpenTracingZipkinUtil.class
+br/com/tracing/filter/OpenTracingZipkinFilter.class
+br/com/tracing/appender/OpenTracingZipkinAppender.class

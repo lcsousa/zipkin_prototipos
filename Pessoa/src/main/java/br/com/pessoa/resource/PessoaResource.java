@@ -31,6 +31,12 @@ public class PessoaResource {
 		pessoa = pessoaService.criarPessoaV2(pessoa);
 		return ResponseEntity.ok(pessoa);
 	}
+	
+	@RequestMapping(method = RequestMethod.POST,path = "v3")
+	public  ResponseEntity<PessoaDTO>  realizaCompra3(@RequestBody PessoaDTO pessoa) {
+		pessoa = pessoaService.criarPessoa3(pessoa);
+		return ResponseEntity.ok(pessoa);
+	}
 
 	
 }

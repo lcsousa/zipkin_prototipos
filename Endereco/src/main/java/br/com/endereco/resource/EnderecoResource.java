@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.endereco.resource.dto.EnderecoDTO;
@@ -30,6 +31,11 @@ public class EnderecoResource {
 	@RequestMapping(method = RequestMethod.POST,path = "v2")
 	public ResponseEntity<EnderecoDTO> getEnderecoV2( @Valid @RequestBody  EnderecoDTO endereco) {
 		return ResponseEntity.ok(enderecoService.getEnderecoV2(endereco.getCep()));
+	}
+	
+	@RequestMapping(method = RequestMethod.GET,path = "v3")
+	public ResponseEntity<EnderecoDTO> getEnderecoV3(@RequestParam(value = "cep" )String cep) {
+		return ResponseEntity.ok(enderecoService.getEnderecoV1(cep));
 	}
 	/*
 	@GetMapping("/v1/{cep}")
